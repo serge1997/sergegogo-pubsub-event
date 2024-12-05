@@ -1,7 +1,7 @@
 # Simple PHP event manager package
 
 ### Example
-```
+```php
 <?php
 
 require __DIR__. "/vendor/autoload.php";

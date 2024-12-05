@@ -16,7 +16,7 @@ event(new UserCreatedEvent($user))
   ->dispatchIf(fn($event) => $event->user->name !== null);
 ```
 
-##Features
+## Features
 
 The package includes the following main methods:
 

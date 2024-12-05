@@ -1,0 +1,21 @@
+{
+    "name": "sergegogo/pubsub-event",
+    "description": "PHP Event manager with more flexbility",
+    "version": "1.0.0",
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SergeGogoEvent\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lotchi Serge Gogo",
+            "email": "serge.gogolo12@gmail.com"
+        }
+    ]
+}

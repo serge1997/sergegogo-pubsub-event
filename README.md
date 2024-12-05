@@ -25,3 +25,92 @@ The package includes the following main methods:
 - dispatchOnly($listener): Similar to dispatchIf, but ensures the event is dispatched only one listener in the event listeners array.
 
 - ignoreIf($condition, $listener): Prevents an event from being dispatched if the specified condition is met. Useful for blocking certain events in specific scenarios.
+
+## Installation
+
+To install the package, use composer:
+```
+composer require sergegogo/pubsub-event
+
+```
+
+## Example Usage
+Create your own class and extends ### SergeGogoEvent\Provider\PubSubEventProvider
+#### 1. EventServiceProvider.php. after this we must create a event 
+UserCreatedEvent and listener SendEmailListener
+```php
+<?php
+namespace App\Providers;
+
+use App\Events\UserCreatedEvent;
+use App\Listeners\SendEmailListener;
+use SergeGogoEvent\Provider\PubSubEventProvider;
+
+class EventServiceProvider extends PubSubEventProvider
+{
+    protected $suscribers = [
+        UserCreatedEvent::class => [
+            SendEmailListener::class
+        ]
+    ];
+
+    public function __construct($event)
+    {
+        parent::__construct($event);
+    }
+}
+```
+#### 2. create your Event (UserCreatedEvent.php) and pass data to the construct magic method
+
+```php
+<?php
+namespace App\Events;
+
+use App\Models\UserModel;
+use SergeGogoEvent\Event\PubSubEvent;
+
+class UserCreatedEvent extends PubSubEvent
+{
+    public function __construct(public UserModel $user)
+    {
+        parent::__construct();
+    }
+}
+```
+### 3. create your listener(s) SendEmailListener for the event.
+```php
+
+<?php
+namespace App\Listeners;
+
+use App\Events\UserCreatedEvent;
+
+class SendEmailListener
+{
+
+    public function handle(UserCreatedEvent $event)
+    {
+        echo "Event dispatched with data: " . json_encode($event);
+    }
+}
+```
+### 4. Finally create a Global function
+```php
+use App\Providers\EventServiceProvider;
+
+if (!function_exists('event')){
+    function event($event){
+        return new EventServiceProvider($event);
+    }
+}
+```
+
+```php
+<?php
+$user = new UserModel("Serge Gogo", "serge@gmail.com");
+event(new UserCreatedEvent($user))
+    ->dispatchIf(fn($event) => $event->user->name !== null);
+
+//OUTPUT: Event dispatched with data {"user":{"name":"Serge Gogo","email":"serge@gmail.com"}}
+```
+The dispatchIf() with callback method has access to all event parameters

@@ -50,7 +50,9 @@ class EventServiceProvider extends PubSubEventProvider
 {
     protected $suscribers = [
         UserCreatedEvent::class => [
-            SendEmailListener::class
+            SendEmailListener::class,
+            UserCreatedListener::class
+            //regist more listener here
         ]
     ];
 
@@ -85,12 +87,28 @@ namespace App\Listeners;
 
 use App\Events\UserCreatedEvent;
 
+#1st listener
 class SendEmailListener
 {
 
     public function handle(UserCreatedEvent $event)
     {
-        echo "Event dispatched with data: " . json_encode($event);
+        echo "Send email listener dispatched successfully with data: " . json_encode($event);
+    }
+}
+
+#2nd listener
+<?php
+namespace  App\Listeners;
+
+use GoEvent\App\Events\UserCreatedEvent;
+
+class UserCreatedListener
+{
+
+    public function handle(UserCreatedEvent $event)
+    {
+        echo "User created listener dispatched successfully with data: " . json_encode($event->user) . PHP_EOL;
     }
 }
 ```
@@ -111,6 +129,7 @@ $user = new UserModel("Serge Gogo", "serge@gmail.com");
 event(new UserCreatedEvent($user))
     ->dispatchIf(fn($event) => $event->user->name !== null);
 
-//OUTPUT: Event dispatched with data {"user":{"name":"Serge Gogo","email":"serge@gmail.com"}}
+//OUTPUT: Send email listener dispatched successfully with data:  {"user":{"name":"Serge Gogo","email":"serge@gmail.com"}},
+//User created listener dispatched successfully with data: {"name":"Serge Gogo","email":"serge@gmail.com"}
 ```
 The dispatchIf() with callback method has access to all event parameters

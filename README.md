@@ -35,7 +35,8 @@ composer require sergegogo/pubsub-event
 ```
 
 ## Example Usage
-Create your own class and extends ### SergeGogoEvent\Provider\PubSubEventProvider
+Create your own class and extends 
+### SergeGogoEvent\Provider\PubSubEventProvider
 #### 1. EventServiceProvider.php. after this we must create a event 
 UserCreatedEvent and listener SendEmailListener
 ```php
